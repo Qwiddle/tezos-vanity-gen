@@ -53,7 +53,7 @@ const findHashes = async ({ logger, searchTerm, caseSensitive }) => {
 
     if(!isMatch) {
       // no match found, next tick
-      setImmediate(tick);    
+      setImmediate(tick);
     } else {
       const secretKey = `${chalk.green('Secret key:')} ${keys.secretKey}`;
       const publicKey = `${chalk.green('Public key:')} ${keys.publicKey}`;
@@ -77,7 +77,7 @@ const main = async () => {
   if(process.argv.length < 3) {
     logger.error({ 
       header: 'Please enter a search term.', 
-      message: 'Usage: yarn start <search term> [-cs (case sensitive)]' 
+      message: 'Usage: yarn start <search term> [-cs (case sensitive)]',
     });
 
     process.exit(1)

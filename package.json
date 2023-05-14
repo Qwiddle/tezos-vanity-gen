@@ -8,7 +8,6 @@
     "start": "node index.js"
   },
   "dependencies": {
-    "@taquito/signer": "^16.1.2",
     "@taquito/taquito": "^16.1.2",
     "bip39": "^3.1.0",
     "chalk": "^5.2.0",

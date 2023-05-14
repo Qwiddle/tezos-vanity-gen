@@ -1,10 +1,8 @@
 import { generateMnemonic, mnemonicToSeed } from 'bip39';
-import { generateSecretKey } from '@taquito/signer';
 import _sodium from 'libsodium-wrappers-sumo';
 import { b58cencode, prefix } from '@taquito/utils';
 import chalk from 'chalk';
 import { Logger } from './logger.js';
-import { vanityASCII } from './config.js';
 
 const generateKeys = async ({ mnemonic, sodium }) => {
   const seed = (await mnemonicToSeed(mnemonic)).slice(0, 32);

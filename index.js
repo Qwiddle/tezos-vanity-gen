@@ -1,7 +1,7 @@
-import { generateMnemonic, mnemonicToSeed } from 'bip39';
-import _sodium from 'libsodium-wrappers-sumo';
-import { b58cencode, prefix } from '@taquito/utils';
 import chalk from 'chalk';
+import _sodium from 'libsodium-wrappers-sumo';
+import { generateMnemonic, mnemonicToSeed } from 'bip39';
+import { b58cencode, prefix } from '@taquito/utils';
 import { Logger } from './logger.js';
 
 const generateKeys = async ({ mnemonic, sodium }) => {

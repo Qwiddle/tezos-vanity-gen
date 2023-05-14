@@ -23,7 +23,7 @@ const findHashes = async ({ logger, searchTerm }) => {
   await _sodium.ready;
   const sodium = _sodium;
 
-  const tick = async () => {
+  const tick = () => {
     ticks++;
 
     logger.log({ 

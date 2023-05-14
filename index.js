@@ -19,26 +19,31 @@ const generateKeys = ({ sodium }) => {
 
 const findHashes = async ({ logger, searchTerm, caseSensitive }) => {
   let ticks = 0;
+  let hashesPerSecond = 0;
 
   await _sodium.ready;
   const sodium = _sodium;
+
+  const countHashesPerSecond = ({ startTicks }) => {
+    setTimeout(() => {
+      hashesPerSecond = ticks - startTicks;
+    }, 1000);
+  }
+
+  setInterval(() => countHashesPerSecond({ startTicks: ticks }), 1000);
 
   const tick = () => {
     ticks++;
 
     logger.log({ 
       header: 'Progress: ', 
-      message: `${chalk.green(ticks + ' keys checked')}`
+      message: `${chalk.green(ticks + ' keys checked')} \ ${chalk.cyan(hashesPerSecond + ' h/s')}`
     });
 
     const keys = generateKeys({ sodium });
     
     //only supports tz1 prefix for now
-    const toFind = `tz1` + `
-      ${caseSensitive 
-        ? searchTerm 
-        : searchTerm.toLowerCase()}
-    `;
+    const toFind = `tz1${caseSensitive ? searchTerm : searchTerm.toLowerCase()}`;
 
     const pkhToCheck = caseSensitive 
       ? keys.publicKeyHash.substring(0, toFind.length)
@@ -57,7 +62,9 @@ const findHashes = async ({ logger, searchTerm, caseSensitive }) => {
       logger.log({
         header: `Match found after checking ${ticks} hashes.\n`, 
         message: `${publicKeyHash}\n${secretKey}\n${publicKey}\n`,
-      })
+      });
+
+      process.exit(0);
     }
   }
   

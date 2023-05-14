@@ -15,7 +15,7 @@ export class Logger {
   }
 
   #writeProgress({ header, message }) {
-    process.stdout.clearLine();
+    process.stdout.clearLine(1);
     process.stdout.cursorTo(0);
     process.stdout.write(`${chalk.yellow(header)}${message}`);
   }

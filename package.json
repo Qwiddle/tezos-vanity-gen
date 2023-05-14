@@ -9,7 +9,6 @@
   },
   "dependencies": {
     "@taquito/taquito": "^16.1.2",
-    "bip39": "^3.1.0",
     "chalk": "^5.2.0",
     "libsodium": "^0.7.11",
     "libsodium-wrappers": "^0.7.11"

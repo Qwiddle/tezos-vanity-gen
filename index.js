@@ -22,11 +22,24 @@ const generateKeys = async ({ mnemonic, sodium }) => {
   }
 }
 
-await (async() => {
-  let ticks = 0;
-
+const main = async () => {
   const logger = new Logger();
+
+  if(process.argv.length < 3) {
+    logger.error({ 
+      header: 'Please enter a search term.', 
+      message: 'Usage: yarn start <search term>' 
+    });
+
+    process.exit(1)
+  }
+
   const searchTerm = process.argv[2];
+  await findHashes({ logger, searchTerm });
+}
+
+const findHashes = async ({ logger, searchTerm }) => {
+  let ticks = 0;
 
   await _sodium.ready;
   const sodium = _sodium;
@@ -60,6 +73,8 @@ await (async() => {
       })
     }
   }
-
+  
   tick();
-})();
+}
+
+main();

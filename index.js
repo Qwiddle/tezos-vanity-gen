@@ -17,7 +17,7 @@ const generateKeys = ({ sodium }) => {
   }
 }
 
-const findHashes = async ({ logger, searchTerm }) => {
+const findHashes = async ({ logger, searchTerm, caseSensitive }) => {
   let ticks = 0;
 
   await _sodium.ready;
@@ -30,11 +30,20 @@ const findHashes = async ({ logger, searchTerm }) => {
       header: 'Progress: ', 
       message: `${chalk.green(ticks + ' keys checked')}`
     });
+
+    const keys = generateKeys({ sodium });
     
     //only supports tz1 prefix for now
-    const toFind = 'tz1' + searchTerm;
+    const toFind = `tz1` + `
+      ${caseSensitive 
+        ? searchTerm 
+        : searchTerm.toLowerCase()}
+    `;
 
-    const keys = generateKeys({ sodium });  
+    const pkhToCheck = caseSensitive 
+      ? keys.publicKeyHash.substring(0, toFind.length)
+      : keys.publicKeyHash.substring(0, toFind.length).toLowerCase();
+      
     const isMatch = toFind === keys.publicKeyHash.substring(0, toFind.length);
 
     if(!isMatch) {
@@ -61,14 +70,16 @@ const main = async () => {
   if(process.argv.length < 3) {
     logger.error({ 
       header: 'Please enter a search term.', 
-      message: 'Usage: yarn start <search term>' 
+      message: 'Usage: yarn start <search term> [-cs (case sensitive)]' 
     });
 
     process.exit(1)
   }
 
   const searchTerm = process.argv[2];
-  await findHashes({ logger, searchTerm });
+  const caseSensitive = process.argv.indexOf('-cs') !== -1;
+
+  await findHashes({ logger, searchTerm, caseSensitive });
 }
 
 main();

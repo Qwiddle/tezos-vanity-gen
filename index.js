@@ -66,7 +66,7 @@ const findHashes = async ({ logger, searchTerm }) => {
       const publicKeyHash = `${chalk.green('Address:')} ${keys.publicKeyHash}`;
 
       logger.log({
-        header: `Match found in ${ticks} attempts.\n`, 
+        header: `Match found after checking ${ticks} hashes.\n`, 
         message: `${publicKeyHash}\n${mnemonic}\n${secretKey}\n${publicKey}\n`,
       })
     }

@@ -17,12 +17,9 @@ const generateKeys = ({ sodium }) => {
   }
 }
 
-const findHashes = async ({ logger, searchTerm, caseSensitive }) => {
+const findHashes = async ({ sodium, logger, searchTerm, caseSensitive }) => {
   let ticks = 0;
   let hashesPerSecond = 0;
-
-  await _sodium.ready;
-  const sodium = _sodium;
 
   const countHashesPerSecond = ({ startTicks }) => {
     setTimeout(() => {
@@ -105,7 +102,8 @@ const main = async () => {
     caseSensitive = process.argv.indexOf('-cs') !== -1;
   }
 
-  await findHashes({ logger, searchTerm, caseSensitive });
+  await _sodium.ready;
+  await findHashes({ sodium: _sodium, logger, searchTerm, caseSensitive });
 }
 
 main();

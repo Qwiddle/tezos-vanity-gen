@@ -49,7 +49,7 @@ const findHashes = async ({ logger, searchTerm, caseSensitive }) => {
       ? keys.publicKeyHash.substring(0, toFind.length)
       : keys.publicKeyHash.substring(0, toFind.length).toLowerCase();
       
-    const isMatch = toFind === keys.publicKeyHash.substring(0, toFind.length);
+    const isMatch = toFind === pkhToCheck;
 
     if (!isMatch) {
       // no match found, next tick

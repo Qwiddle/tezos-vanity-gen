@@ -77,7 +77,7 @@ const main = async () => {
   let searchTerm =  '';
   let caseSensitive = false;
 
-  const getUserParameters = async ({ args }) => {
+  const getUserParameters = async () => {
     logger.error({ 
       header: 'No search term provided. See example below.', 
       message: `Usage: yarn start <search term> [-cs (case sensitive)].\n${chalk.bold(`Switching to manual input mode.`)}\n`,

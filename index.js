@@ -37,7 +37,7 @@ const findHashes = async ({ logger, searchTerm, caseSensitive }) => {
 
     logger.log({ 
       header: 'Progress: ', 
-      message: `${chalk.green(ticks + ' keys checked')} \ ${chalk.cyan(hashesPerSecond + ' h/s')}`
+      message: `${chalk.green(ticks + ' keys checked.')} ${chalk.cyan(hashesPerSecond + ' h/s')}`
     });
 
     const keys = generateKeys({ sodium });
@@ -51,7 +51,7 @@ const findHashes = async ({ logger, searchTerm, caseSensitive }) => {
       
     const isMatch = toFind === keys.publicKeyHash.substring(0, toFind.length);
 
-    if(!isMatch) {
+    if (!isMatch) {
       // no match found, next tick
       setImmediate(tick);
     } else {
@@ -74,17 +74,36 @@ const findHashes = async ({ logger, searchTerm, caseSensitive }) => {
 const main = async () => {
   const logger = new Logger();
 
-  if(process.argv.length < 3) {
+  let searchTerm =  '';
+  let caseSensitive = false;
+
+  const getUserParameters = async ({ args }) => {
     logger.error({ 
-      header: 'Please enter a search term.', 
-      message: 'Usage: yarn start <search term> [-cs (case sensitive)]',
+      header: 'No search term provided. See example below.', 
+      message: `Usage: yarn start <search term> [-cs (case sensitive)].\n${chalk.bold(`Switching to manual input mode.`)}\n`,
     });
 
-    process.exit(1)
+    const searchTermResponse = await logger.readLineAsync({ 
+      message: `${chalk.yellow(`What term would you like to search for?`)}\n` 
+    });
+
+    const caseSensitiveResponse = await logger.readLineAsync({ 
+      message: `${chalk.yellow(`Is your search term case sensitive?`)}\n` 
+    });
+
+    logger.readline.close();
+    logger.clear();
+
+    searchTerm = searchTermResponse;
+    caseSensitive = caseSensitiveResponse === 'y' || caseSensitiveResponse === 'yes';
   }
 
-  const searchTerm = process.argv[2];
-  const caseSensitive = process.argv.indexOf('-cs') !== -1;
+  if (process.argv.length < 3) {
+    await getUserParameters({ args: process.argv });
+  } else {
+    searchTerm = process.argv[2];
+    caseSensitive = process.argv.indexOf('-cs') !== -1;
+  }
 
   await findHashes({ logger, searchTerm, caseSensitive });
 }

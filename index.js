@@ -71,10 +71,14 @@ const findHashes = async ({ sodium, logger, searchTerm, caseSensitive }) => {
 const main = async () => {
   const logger = new Logger();
 
-  let searchTerm =  '';
-  let caseSensitive = false;
+  const getUserParameters = async ({ args }) => {
+    if (args.length > 2) {
+      return {
+        searchTerm: args[2],
+        caseSensitivee: process.argv.indexOf('-cs') !== -1,
+      }
+    }
 
-  const getUserParameters = async () => {
     logger.error({ 
       header: 'No search term provided. See example below.', 
       message: `Usage: yarn start <search term> [-cs (case sensitive)].\n${chalk.bold(`Switching to manual input mode.`)}\n`,
@@ -91,16 +95,13 @@ const main = async () => {
     logger.readline.close();
     logger.clear();
 
-    searchTerm = searchTermResponse;
-    caseSensitive = caseSensitiveResponse === 'y' || caseSensitiveResponse === 'yes';
+    return {
+      searchTerm: searchTermResponse,
+      caseSensitive: caseSensitiveResponse === 'y' || caseSensitiveResponse === 'yes',
+    };
   }
 
-  if (process.argv.length < 3) {
-    await getUserParameters({ args: process.argv });
-  } else {
-    searchTerm = process.argv[2];
-    caseSensitive = process.argv.indexOf('-cs') !== -1;
-  }
+  const { searchTerm, caseSensitive } = await getUserParameters({ args: process.argv });
 
   await _sodium.ready;
   await findHashes({ sodium: _sodium, logger, searchTerm, caseSensitive });
